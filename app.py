@@ -7,7 +7,7 @@ import json
 import generate_data
 
 app = Flask(__name__)
-client = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb://localhost:27017", connect=False)
 db=client['citibike-realtime']
 
 @app.route('/')
@@ -23,18 +23,30 @@ def get_data():
 
 @app.route('/recent-data')
 def get_recent():
-	station_id = int(request.args.get('station-id', default=72))
-	two_hours_ago = datetime.now() - timedelta(hours=10)
+	station_id = int(request.args.get('stationid', default=72))
+	two_hours_ago = datetime.now() - timedelta(hours=6)
+	print('station_id', station_id)
+	print('station_id == 72', station_id == 72)
+
+	all_logs = db.logs.find({
+		"id": 72
+	})
+
+	all_logs = list(all_logs)
+	print('all logs length', len(all_logs))
+	print('two_hours_ago', two_hours_ago)
 
 	recent_data = list(db.logs.find({
 		"executionTime": { '$gte': two_hours_ago },
 		"id": station_id
 	}))
+	print('len(recent_data)', len(recent_data))
 
 	for i, log in enumerate(recent_data):
 		recent_data[i]['_id'] = str(recent_data[i]['_id'])
 
-	return jsonify(list(recent_data))
+	return jsonify(recent_data)
 
 if __name__ == "__main__":
    app.run()
+
