@@ -24,13 +24,14 @@ def get_data():
 @app.route('/recent-data')
 def get_recent():
 	alldata = db.logs.find({"stationName": "6 Ave & Canal St"})
-	print(list(alldata))
-	two_hours_ago = datetime.now() - timedelta(hours=10)
-	print(two_hours_ago)
-	start = datetime(2014, 9, 24, 7, 51, 4)
 
-	recent_data = db.logs.find({"lastCommunicationTime": { '$lte': start }})
-	# print('data', list(alldata))
+	two_hours_ago = datetime.now() - timedelta(hours=10)
+
+	recent_data = list(db.logs.find({"executionTime": { '$gte': two_hours_ago }}))
+
+
+	for i, log in enumerate(recent_data):
+		recent_data[i]['_id'] = str(recent_data[i]['_id'])
 
 
 	return jsonify(list(recent_data))
