@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from bson import json_util
@@ -23,19 +23,18 @@ def get_data():
 
 @app.route('/recent-data')
 def get_recent():
-	alldata = db.logs.find({"stationName": "6 Ave & Canal St"})
-
+	station_id = int(request.args.get('station-id', default=72))
 	two_hours_ago = datetime.now() - timedelta(hours=10)
 
-	recent_data = list(db.logs.find({"executionTime": { '$gte': two_hours_ago }}))
-
+	recent_data = list(db.logs.find({
+		"executionTime": { '$gte': two_hours_ago },
+		"id": station_id
+	}))
 
 	for i, log in enumerate(recent_data):
 		recent_data[i]['_id'] = str(recent_data[i]['_id'])
 
-
 	return jsonify(list(recent_data))
-
 
 if __name__ == "__main__":
    app.run()
