@@ -9,14 +9,12 @@ db=client['citibike-realtime']
 ## Get data from API
 ##
 def get_data():
-	print('getting data')
 	req = requests.get("https://feeds.citibikenyc.com/stations/stations.json")
 
 	req_json = req.json()
 
 	## Times are in NYC timezone
 	req_json['executionTime'] = datetime.strptime(req_json['executionTime'], '%Y-%m-%d %I:%M:%S %p')
-	print(req_json['executionTime'])
 	return req_json
 
 ##
