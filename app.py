@@ -25,27 +25,27 @@ def get_data():
 def get_recent():
 	station_id = int(request.args.get('stationid', default=72))
 	two_hours_ago = datetime.now() - timedelta(hours=6)
-	print('station_id', station_id)
-	print('station_id == 72', station_id == 72)
-
-	all_logs = db.logs.find({
-		"id": 72
-	})
-
-	all_logs = list(all_logs)
-	print('all logs length', len(all_logs))
-	print('two_hours_ago', two_hours_ago)
 
 	recent_data = list(db.logs.find({
 		"executionTime": { '$gte': two_hours_ago },
 		"id": station_id
 	}))
-	print('len(recent_data)', len(recent_data))
 
 	for i, log in enumerate(recent_data):
 		recent_data[i]['_id'] = str(recent_data[i]['_id'])
 
 	return jsonify(recent_data)
+
+@app.route('/hourly-averages')
+def get_hourly_averages():
+	station_id = int(request.args.get('stationid', default=72))
+
+	hourly_averages = list(db.hourly_averages.find({ "id": station_id }))
+
+	for i, log in enumerate(hourly_averages):
+		hourly_averages[i]['_id'] = str(hourly_averages[i]['_id'])
+
+	return jsonify(hourly_averages)
 
 if __name__ == "__main__":
    app.run()
