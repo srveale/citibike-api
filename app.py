@@ -42,6 +42,8 @@ def get_hourly_averages():
 
 	hourly_averages = list(db.hourly_averages.find({ "id": station_id }))
 
+	print(hourly_averages)
+
 	for i, log in enumerate(hourly_averages):
 		hourly_averages[i]['_id'] = str(hourly_averages[i]['_id'])
 
