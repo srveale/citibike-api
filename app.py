@@ -40,7 +40,7 @@ def get_recent():
 def get_hourly_averages():
 	station_id = int(request.args.get('stationid', default=72))
 
-	hourly_averages = list(db.hourly_averages.find({ "id": station_id }))
+	hourly_averages = list(db.hourly_averages.find({ "dock_id": station_id }))
 
 	print(hourly_averages)
 
