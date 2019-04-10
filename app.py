@@ -51,7 +51,7 @@ def get_hourly_averages():
 def get_predictions():
 
 	# Most recent preds 
-	predictions = list(db.predictions.find()).sort({"_id": 1})[0]
+	predictions = list(db.predictions.find().sort({"_id": 1}))[0]
 
 	predictions['_id'] = str(predictions['_id'])
 
