@@ -23,7 +23,8 @@ def get_data():
 @app.route('/recent-data')
 def get_recent():
 	station_id = int(request.args.get('stationid', default=72))
-	two_hours_ago = datetime.now() - timedelta(hours=6)
+	history_duration = int(request.args.get('historyDuration', default=2))
+	two_hours_ago = datetime.now() - timedelta(hours=history_duration)
 
 	recent_data = list(db.logs.find({
 		"executionTime": { '$gte': two_hours_ago },
