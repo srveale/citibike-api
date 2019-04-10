@@ -23,8 +23,7 @@ def get_data():
 @app.route('/recent-data')
 def get_recent():
 	station_id = int(request.args.get('stationid', default=72))
-	history_duration = int(request.args.get('historyDuration', default=2))
-	two_hours_ago = datetime.now() - timedelta(hours=history_duration)
+	two_hours_ago = datetime.now() - timedelta(hours=6)
 
 	recent_data = list(db.logs.find({
 		"executionTime": { '$gte': two_hours_ago },
@@ -54,7 +53,6 @@ def get_predictions():
 	# Most recent preds 
 	predictions = list(db.predictions.find().sort([("_id", 1)]))[0]
 
-	predictions['_id'] = str(predictions['_id'])
 	return jsonify(predictions)
 
 if __name__ == "__main__":
