@@ -53,7 +53,6 @@ def get_predictions():
 	# Most recent preds 
 	predictions = list(db.predictions.find().sort([("_id", 1)]))[0]
 
-	predictions['_id'] = str(predictions['_id'])
 	return jsonify(predictions)
 
 if __name__ == "__main__":
