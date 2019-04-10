@@ -18,7 +18,6 @@ def hello_world():
 @app.route('/bike-data')
 def get_data():
 	data = generate_data.crazy_machine_learning_function()
-	print('data', data)
 	return jsonify(data)
 
 @app.route('/recent-data')
@@ -42,12 +41,18 @@ def get_hourly_averages():
 
 	hourly_averages = list(db.hourly_averages.find({ "dock_id": station_id }))
 
-	print(hourly_averages)
-
 	for i, log in enumerate(hourly_averages):
 		hourly_averages[i]['_id'] = str(hourly_averages[i]['_id'])
 
 	return jsonify(hourly_averages)
+
+@app.route('/predictions')
+def get_predictions():
+
+	# Most recent preds 
+	predictions = list(db.predictions.find()).sort({"_id": 1})[0]
+
+	return jsonify(predictions)
 
 if __name__ == "__main__":
    app.run()
