@@ -23,8 +23,8 @@ def get_data():
 @app.route('/recent-data')
 def get_recent():
 	station_id = int(request.args.get('stationid', default=72))
-	history_duration = int(request.args.get('historyDuration', default=2))
-	two_hours_ago = datetime.now() - timedelta(hours=history_duration)
+	history_duration = int(request.args.get('historyDuration', default=72))
+	two_hours_ago = datetime.now() - timedelta(hours=history_duration + 4) ## Server time 4 hours ahead of NY
 
 	recent_data = list(db.logs.find({
 		"executionTime": { '$gte': two_hours_ago },
@@ -50,11 +50,9 @@ def get_hourly_averages():
 @app.route('/predictions')
 def get_predictions():
 
-#	print(list(db.predictions.find().sort({"_id": 1})))
 	# Most recent preds 
-	predictions = list(db.predictions.find().sort([("_id", 1)]))[0]
+	predictions = list(db.predictions.find()).sort({"_id": 1})[0]
 
-	predictions['_id'] = str(predictions['_id'])
 	return jsonify(predictions)
 
 if __name__ == "__main__":
